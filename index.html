@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            background: linear-gradient(45deg, #2c3e50, #3498db);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            font-family: 'Arial', sans-serif;
+        }
+
+        .container {
+            text-align: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .message {
+            color: white;
+            font-size: 2.5em;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            margin-bottom: 20px;
+            opacity: 0;
+            animation: fadeInText 2s forwards;
+        }
+
+        .name {
+            color: #fff;
+            font-size: 3em;
+            font-weight: bold;
+            text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.4);
+            margin-bottom: 30px;
+            opacity: 0;
+            animation: fadeInName 2s forwards 0.5s;
+        }
+
+        .broken-heart-left,
+        .broken-heart-right {
+            position: absolute;
+            width: 20px;
+            height: 35px;
+            background-color: #e74c3c;
+            transform-origin: center;
+            pointer-events: none;
+        }
+
+        .broken-heart-left::before,
+        .broken-heart-right::before {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 35px;
+            border-radius: 35px 35px 0 0;
+            background-color: #e74c3c;
+        }
+
+        .broken-heart-left {
+            animation: floatHeartLeft 4s linear infinite;
+        }
+
+        .broken-heart-right {
+            animation: floatHeartRight 4s linear infinite;
+        }
+
+        .broken-heart-left::before {
+            transform: rotate(-45deg);
+            transform-origin: 100% 100%;
+        }
+
+        .broken-heart-right::before {
+            transform: rotate(45deg);
+            transform-origin: 0 100%;
+        }
+
+        .rain {
+            position: absolute;
+            width: 2px;
+            height: 50px;
+            background: linear-gradient(transparent, rgba(255, 255, 255, 0.5));
+            animation: rain 1s linear infinite;
+        }
+
+        /* Music Player Styles */
+        .audio-player {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 15px 30px;
+            border-radius: 50px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            z-index: 1000;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            width: auto;
+            min-width: 300px;
+        }
+
+        .play-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #e74c3c;
+            border: none;
+            color: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .play-btn:hover {
+            transform: scale(1.1);
+            background: #c0392b;
+        }
+
+        .audio-controls {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-grow: 1;
+        }
+
+        .progress-bar {
+            height: 4px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 2px;
+            cursor: pointer;
+            flex-grow: 1;
+        }
+
+        .progress {
+            height: 100%;
+            background: #e74c3c;
+            border-radius: 2px;
+            width: 0%;
+            transition: width 0.1s linear;
+        }
+
+        .time {
+            color: white;
+            font-size: 0.8em;
+            min-width: 35px;
+        }
+
+        .volume-control {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .volume-slider {
+            width: 60px;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 2px;
+            cursor: pointer;
+        }
+
+        .volume-level {
+            height: 100%;
+            background: #e74c3c;
+            border-radius: 2px;
+            width: 80%;
+        }
+
+        @keyframes fadeInText {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInName {
+            from {
+                opacity: 0;
+                transform: scale(0.8);
+            }
+
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        @keyframes floatHeartLeft {
+            0% {
+                transform: translateY(100vh) translateX(-10px) rotate(-20deg);
+                opacity: 1;
+            }
+
+            100% {
+                transform: translateY(-100vh) translateX(-100px) rotate(-60deg);
+                opacity: 0;
+            }
+        }
+
+        @keyframes floatHeartRight {
+            0% {
+                transform: translateY(100vh) translateX(10px) rotate(20deg);
+                opacity: 1;
+            }
+
+            100% {
+                transform: translateY(-100vh) translateX(100px) rotate(60deg);
+                opacity: 0;
+            }
+        }
+
+        @keyframes rain {
+            0% {
+                transform: translateY(-50px);
+                opacity: 0;
+            }
+
+            50% {
+                opacity: 1;
+            }
+
+            100% {
+                transform: translateY(100vh);
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="name">Leivon Alphina Kom</div>
+        <div class="message">Don't miss me 💔</div>
+    </div>
+
+    <!-- Hidden audio element -->
+    <audio id="background-music" loop>
+        <!-- Replace the src with your music file path -->
+        <source src="My-Heart-Will-Go-On.mp3" type="audio/mpeg">
+    </audio>
+
+    <div class="audio-player">
+        <button class="play-btn">
+            <i class="fas fa-play"></i>
+        </button>
+        <div class="audio-controls">
+            <span class="time current-time">0:00</span>
+            <div class="progress-bar">
+                <div class="progress"></div>
+            </div>
+            <span class="time duration">0:00</span>
+        </div>
+        <div class="volume-control">
+            <i class="fas fa-volume-up volume-icon" style="color: white;"></i>
+            <div class="volume-slider">
+                <div class="volume-level"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Create broken hearts
+        function createBrokenHeart() {
+            const leftPiece = document.createElement('div');
+            const rightPiece = document.createElement('div');
+
+            leftPiece.className = 'broken-heart-left';
+            rightPiece.className = 'broken-heart-right';
+
+            const xPos = Math.random() * 100;
+            leftPiece.style.left = xPos + 'vw';
+            rightPiece.style.left = (xPos + 10) + 'vw';
+
+            document.body.appendChild(leftPiece);
+            document.body.appendChild(rightPiece);
+
+            setTimeout(() => {
+                leftPiece.remove();
+                rightPiece.remove();
+            }, 4000);
+        }
+
+        // Create rain effect
+        function createRain() {
+            const rain = document.createElement('div');
+            rain.className = 'rain';
+            rain.style.left = Math.random() * 100 + 'vw';
+            rain.style.animationDuration = (Math.random() * 0.5 + 0.5) + 's';
+            document.body.appendChild(rain);
+
+            setTimeout(() => {
+                rain.remove();
+            }, 1000);
+        }
+
+        // Music player functionality
+        const audioElement = document.getElementById('background-music');
+        const playBtn = document.querySelector('.play-btn');
+        const progress = document.querySelector('.progress');
+        const progressBar = document.querySelector('.progress-bar');
+        const currentTimeDisplay = document.querySelector('.current-time');
+        const durationDisplay = document.querySelector('.duration');
+        const volumeIcon = document.querySelector('.volume-icon');
+        const volumeSlider = document.querySelector('.volume-slider');
+        const volumeLevel = document.querySelector('.volume-level');
+
+        // Set initial volume
+        audioElement.volume = 0.8;
+
+        // Format time function (converts seconds to mm:ss format)
+        function formatTime(seconds) {
+            const minutes = Math.floor(seconds / 60);
+            const remainingSeconds = Math.floor(seconds % 60);
+            return `${minutes}:${remainingSeconds < 10 ? '0' : ''}${remainingSeconds}`;
+        }
+
+        // Update duration display when metadata is loaded
+        audioElement.addEventListener('loadedmetadata', () => {
+            durationDisplay.textContent = formatTime(audioElement.duration);
+        });
+
+        // Update progress bar and current time display
+        audioElement.addEventListener('timeupdate', () => {
+            if (audioElement.duration) {
+                const progressPercent = (audioElement.currentTime / audioElement.duration) * 100;
+                progress.style.width = `${progressPercent}%`;
+                currentTimeDisplay.textContent = formatTime(audioElement.currentTime);
+            }
+        });
+
+        // Handle play/pause
+        playBtn.addEventListener('click', () => {
+            if (audioElement.paused) {
+                audioElement.play();
+                playBtn.innerHTML = '<i class="fas fa-pause"></i>';
+            } else {
+                audioElement.pause();
+                playBtn.innerHTML = '<i class="fas fa-play"></i>';
+            }
+        });
+
+        // Handle seeking when clicking on progress bar
+        progressBar.addEventListener('click', (e) => {
+            const clickPosition = e.offsetX / progressBar.offsetWidth;
+            audioElement.currentTime = clickPosition * audioElement.duration;
+        });
+
+        // Handle volume control
+        volumeSlider.addEventListener('click', (e) => {
+            const clickPosition = e.offsetX / volumeSlider.offsetWidth;
+            audioElement.volume = clickPosition;
+            volumeLevel.style.width = `${clickPosition * 100}%`;
+
+            // Update volume icon based on level
+            if (clickPosition === 0) {
+                volumeIcon.className = 'fas fa-volume-mute';
+            } else if (clickPosition < 0.5) {
+                volumeIcon.className = 'fas fa-volume-down';
+            } else {
+                volumeIcon.className = 'fas fa-volume-up';
+            }
+        });
+
+        // Toggle mute when clicking volume icon
+        volumeIcon.addEventListener('click', () => {
+            if (audioElement.muted) {
+                audioElement.muted = false;
+                volumeLevel.style.width = `${audioElement.volume * 100}%`;
+                volumeIcon.className = audioElement.volume < 0.5 ? 'fas fa-volume-down' : 'fas fa-volume-up';
+            } else {
+                audioElement.muted = true;
+                volumeLevel.style.width = '0%';
+                volumeIcon.className = 'fas fa-volume-mute';
+            }
+        });
+
+        // Reset player when audio ends
+        audioElement.addEventListener('ended', () => {
+            if (!audioElement.loop) {
+                progress.style.width = '0%';
+                playBtn.innerHTML = '<i class="fas fa-play"></i>';
+            }
+        });
+
+        // Generate effects
+        setInterval(createBrokenHeart, 500);
+        setInterval(createRain, 100);
+    </script>
+</body>
+
+</html>
